@@ -44,6 +44,16 @@
     <preference for="Magento\Catalog\Api\AttributeSetRepositoryInterface" type="Magento\Catalog\Model\Product\Attribute\SetRepository" />
     <preference for="Magento\Catalog\Api\ProductManagementInterface" type="Magento\Catalog\Model\ProductManagement" />
     <preference for="Magento\Catalog\Api\AttributeSetFinderInterface" type="Magento\Catalog\Model\Product\Attribute\AttributeSetFinder" />
+
+    <preference for="Magento\Catalog\Api\TierPriceStorageInterface" type="Magento\Catalog\Model\Product\Price\TierPriceStorage" />
+    <preference for="Magento\Catalog\Api\Data\TierPriceInterface" type="Magento\Catalog\Model\Product\Price\TierPrice" />
+    <preference for="Magento\Catalog\Api\BasePriceStorageInterface" type="Magento\Catalog\Model\Product\Price\BasePriceStorage" />
+    <preference for="Magento\Catalog\Api\Data\BasePriceInterface" type="Magento\Catalog\Model\Product\Price\BasePrice" />
+    <preference for="Magento\Catalog\Api\CostStorageInterface" type="Magento\Catalog\Model\Product\Price\CostStorage" />
+    <preference for="Magento\Catalog\Api\Data\CostInterface" type="Magento\Catalog\Model\Product\Price\Cost" />
+    <preference for="Magento\Catalog\Model\ProductIdLocatorInterface" type="Magento\Catalog\Model\ProductIdLocator" />
+    <preference for="Magento\Catalog\Model\Config\Source\ProductPriceOptionsInterface" type="Magento\Catalog\Model\Config\Source\Product\Options\Price"/>
+
     <type name="Magento\Customer\Model\ResourceModel\Visitor">
         <plugin name="catalogLog" type="Magento\Catalog\Model\Plugin\Log" />
     </type>
@@ -593,14 +603,22 @@
                     <item name="read" xsi:type="array">
                         <item name="optionReader" xsi:type="string">Magento\Catalog\Model\Product\Option\ReadHandler</item>
                         <item name="mediaGalleryRead" xsi:type="string">Magento\Catalog\Model\Product\Gallery\ReadHandler</item>
+                        <item name="categoryProductLinksRead" xsi:type="string">Magento\Catalog\Model\Category\Link\ReadHandler</item>
+                        <item name="websiteReader" xsi:type="string">Magento\Catalog\Model\Product\Website\ReadHandler</item>
                     </item>
                     <item name="create" xsi:type="array">
                         <item name="custom_options" xsi:type="string">Magento\Catalog\Model\Product\Option\SaveHandler</item>
                         <item name="mediaGalleryCreate" xsi:type="string">Magento\Catalog\Model\Product\Gallery\CreateHandler</item>
+                        <item name="categoryProductLinksSave" xsi:type="string">Magento\Catalog\Model\Category\Link\SaveHandler</item>
+                        <item name="websitePersistor" xsi:type="string">Magento\Catalog\Model\Product\Website\SaveHandler</item>
+                        <item name="tierPriceCreator" xsi:type="string">Magento\Catalog\Model\Product\Attribute\Backend\TierPrice\SaveHandler</item>
                     </item>
                     <item name="update" xsi:type="array">
                         <item name="optionUpdater" xsi:type="string">Magento\Catalog\Model\Product\Option\SaveHandler</item>
                         <item name="mediaGalleryUpdate" xsi:type="string">Magento\Catalog\Model\Product\Gallery\UpdateHandler</item>
+                        <item name="categoryProductLinksSave" xsi:type="string">Magento\Catalog\Model\Category\Link\SaveHandler</item>
+                        <item name="websitePersistor" xsi:type="string">Magento\Catalog\Model\Product\Website\SaveHandler</item>
+                        <item name="tierPriceUpdater" xsi:type="string">Magento\Catalog\Model\Product\Attribute\Backend\TierPrice\UpdateHandler</item>
                     </item>
                 </item>
             </argument>
@@ -778,6 +796,32 @@
                 <item name="Magento\Catalog\Api\Data\CategoryInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
                 <item name="Magento\Catalog\Api\Data\CategoryTreeInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
                 <item name="Magento\Catalog\Api\Data\ProductInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Price\CostStorage">
+        <arguments>
+            <argument name="allowedProductTypes" xsi:type="array">
+                <item name="0" xsi:type="string">simple</item>
+                <item name="1" xsi:type="string">virtual</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Price\BasePriceStorage">
+        <arguments>
+            <argument name="allowedProductTypes" xsi:type="array">
+                <item name="0" xsi:type="string">simple</item>
+                <item name="1" xsi:type="string">virtual</item>
+                <item name="2" xsi:type="string">bundle</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Price\TierPriceValidator">
+        <arguments>
+            <argument name="allowedProductTypes" xsi:type="array">
+                <item name="0" xsi:type="string">simple</item>
+                <item name="1" xsi:type="string">virtual</item>
+                <item name="2" xsi:type="string">bundle</item>
             </argument>
         </arguments>
     </type>

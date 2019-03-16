@@ -150,39 +150,36 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         foreach ($this->storeRepository->getList() as $store) {
             $storeId = $store->getId();
 
+            $storeLabelConfiguration = [
+                'dataType' => 'text',
+                'formElement' => 'input',
+                'component' => 'Magento_Catalog/js/form/element/input',
+                'template' => 'Magento_Catalog/form/element/input',
+                'prefixName' => 'option.value',
+                'prefixElementName' => 'option_',
+                'suffixName' => (string)$storeId,
+                'label' => $store->getName(),
+                'sortOrder' => $sortOrder,
+                'componentType' => Field::NAME,
+            ];
+            // JS code can't understand 'required-entry' => false|null, we have to avoid even empty property.
+            if ($store->getCode() == Store::ADMIN_CODE) {
+                $storeLabelConfiguration['validation'] = [
+                    'required-entry' => true,
+                ];
+            }
             $meta['attribute_options_select_container']['children']['attribute_options_select']['children']
             ['record']['children']['value_option_' . $storeId] = $this->arrayManager->set(
                 'arguments/data/config',
                 [],
-                [
-                    'dataType' => 'text',
-                    'formElement' => 'input',
-                    'component' => 'Magento_Catalog/js/form/element/input',
-                    'template' => 'Magento_Catalog/form/element/input',
-                    'prefixName' => 'option.value',
-                    'prefixElementName' => 'option_',
-                    'suffixName' => (string)$storeId,
-                    'label' => $store->getName(),
-                    'sortOrder' => $sortOrder,
-                    'componentType' => Field::NAME,
-                ]
+                $storeLabelConfiguration
             );
+
             $meta['attribute_options_multiselect_container']['children']['attribute_options_multiselect']['children']
             ['record']['children']['value_option_' . $storeId] = $this->arrayManager->set(
                 'arguments/data/config',
                 [],
-                [
-                    'dataType' => 'text',
-                    'formElement' => 'input',
-                    'component' => 'Magento_Catalog/js/form/element/input',
-                    'template' => 'Magento_Catalog/form/element/input',
-                    'prefixName' => 'option.value',
-                    'prefixElementName' => 'option_',
-                    'suffixName' => (string)$storeId,
-                    'label' => $store->getName(),
-                    'sortOrder' => $sortOrder,
-                    'componentType' => Field::NAME,
-                ]
+                $storeLabelConfiguration
             );
             ++$sortOrder;
         }

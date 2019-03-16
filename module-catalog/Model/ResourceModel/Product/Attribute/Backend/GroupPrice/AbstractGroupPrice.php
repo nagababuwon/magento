@@ -121,7 +121,6 @@ abstract class AbstractGroupPrice extends \Magento\Framework\Model\ResourceModel
     {
         $connection = $this->getConnection();
         $data = $this->_prepareDataForTable($priceObject, $this->getMainTable());
-
         if (!empty($data[$this->getIdFieldName()])) {
             $where = $connection->quoteInto($this->getIdFieldName() . ' = ?', $data[$this->getIdFieldName()]);
             unset($data[$this->getIdFieldName()]);

@@ -412,7 +412,8 @@ class AdvancedPricing extends AbstractModifier
                 'data' => [
                     'config' => [
                         'componentType' => 'dynamicRows',
-                        'label' => __('Tier Price'),
+                        'component' => 'Magento_Catalog/js/components/dynamic-rows-tier-price',
+                        'label' => __('Customer Group Price'),
                         'renderDefaultRecord' => false,
                         'recordTemplate' => 'record',
                         'dataScope' => '',
