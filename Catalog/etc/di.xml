@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Funimation\Catalog\Api\ProductRepositoryInterface" type="Funimation\Catalog\Model\ProductRepository" />
+
+    <preference for="Funimation\Catalog\Api\Data\AttributeInterface" type="Funimation\Catalog\Model\Data\Attribute" />
+
+    <preference for="Funimation\Catalog\Api\Data\ProductLayeredResultsInterface" type="Funimation\Catalog\Model\Data\ProductLayeredResult" />
+    <preference for="Funimation\Catalog\Api\Data\FilterInterface" type="Funimation\Catalog\Model\Data\Filter" />
+    <preference for="Funimation\Catalog\Api\Data\FilterOptionInterface" type="Funimation\Catalog\Model\Data\FilterOption" />
+
+    <preference for="Funimation\Catalog\Api\ProductLinkManagementInterface" type="Funimation\Catalog\Model\ProductLinkManagement" />
+
+    <preference for="Funimation\Catalog\Api\Data\ConfigurableOptionInterface" type="Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute" />
+    <preference for="Funimation\Catalog\Api\Data\ConfigurableOptionValueInterface" type="Funimation\Catalog\Model\Data\ConfigurableOptionValue" />
+    
+    <preference for="Funimation\Catalog\Api\CategoryManagementInterface" 
+                type="Funimation\Catalog\Model\CategoryManagement" />
+    
+    <preference for="Funimation\Catalog\Api\Data\CategoryTreeInterface" 
+                type="Funimation\Catalog\Model\Category" />
+
+    <!-- bug fix for configurable product switching back to simple -->
+    <preference for="Magento\Catalog\Model\Product\TypeTransitionManager"
+                type="Funimation\Catalog\Model\Product\TypeTransitionManager" />
+
+
+    <preference for="Magento\Catalog\Model\ResourceModel\Product\Collection"
+                type="Funimation\Catalog\Model\ResourceModel\Product\Collection" />
+
+    <type name="Funimation\Catalog\Model\ProductRepository">
+        <arguments>
+            <argument name="filterableAttributes" xsi:type="object">Magento\Catalog\Model\Layer\Search\FilterableAttributeList</argument>
+        </arguments>
+    </type>
+<!--
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="add_attributes_plugin" type="Funimation\Catalog\Plugin\Link" sortOrder="10" />
+    </type>
+-->
+    <type name="Magento\Catalog\Model\ResourceModel\Eav\Attribute">
+        <plugin name="save_attributes_plugin" type="Funimation\Catalog\Plugin\Attribute" sortOrder="15" />
+    </type>
+
+
+</config>

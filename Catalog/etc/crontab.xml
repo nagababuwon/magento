@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="custom_cron_jobs">
+        <job name="funimation_catalog_sale_item_product" instance="Funimation\Catalog\Cron\SaleItemProduct" method="execute">
+            <config_path>jobs/cron_special_price/schedule_special_price</config_path>
+        </job>
+        <job name="funimation_catalog_related_product" instance="Funimation\Catalog\Cron\RelatedProduct" method="execute">
+            <config_path>jobs/cron_related_products/schedule_related_products</config_path>
+        </job>
+    </group>
+</config>
