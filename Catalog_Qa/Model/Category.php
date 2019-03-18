@@ -27,7 +27,7 @@ class Category
     implements \Funimation\Catalog\Api\Data\CategoryTreeInterface
 {
     const KEY_INCLUDE_IN_MENU = 'include_in_menu';
-    
+
     /**
      * {@inheritdoc}
      */

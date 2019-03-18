@@ -202,14 +202,14 @@ interface ProductPriceAndStatusInterface
     /**
      * Gets list of product tier prices
      *
-     * @return \Magento\Catalog\Api\Data\ProductTierPriceInterface[]|null
+     * @return \Funimation\Catalog\Api\Data\ProductTierPriceInterface[]|null
      */
     public function getTierPrices();
 
     /**
      * Sets list of product tier prices
      *
-     * @param \Magento\Catalog\Api\Data\ProductTierPriceInterface[] $tierPrices
+     * @param \Funimation\Catalog\Api\Data\ProductTierPriceInterface[] $tierPrices
      * @return $this
      */
     public function setTierPrices(array $tierPrices = null);
