@@ -112,6 +112,35 @@ class UpgradeData implements UpgradeDataInterface
 
             $eavSetup->addAttributeToSet(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'Product Details', 'is_sale_item');
         }
+        if ($context->getVersion()
+            && version_compare($context->getVersion(), '1.3.1') < 0
+        ) {
+            $connection = $setup->getConnection();
+
+            $connection->addColumn(
+
+                $setup->getTable('catalog_product_entity_tier_price'),
+
+                'percentage_value',
+
+                [
+
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+
+                    'nullable' => false,
+
+                    'default' => NULL,
+
+                    'length' => '5,2',
+
+                    'comment' => 'Percentage value',
+
+                    'after' => 'value'
+
+                ]
+
+            );
+        }
 
         $setup->endSetup();
     }

@@ -52,7 +52,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     protected $storeManager;
 
     /**
-     * @var \Magento\Review\Model\Review\SummaryFactory 
+     * @var \Magento\Review\Model\Review\SummaryFactory
      */
     protected $summaryFactory;
 
@@ -60,14 +60,14 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
      * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory
      */
     protected $categoryCollectionFactory;
-    
+
     /**
-     * @var \Funimation\SizeChart\Api\SizeChartInterface 
+     * @var \Funimation\SizeChart\Api\SizeChartInterface
      */
     protected $sizeChartModelFactory;
-    
+
     /**
-     * @var \Funimation\SizeChart\Model\Data\SizeChartFactory 
+     * @var \Funimation\SizeChart\Model\Data\SizeChartFactory
      */
     protected $sizeChart;
 
@@ -106,6 +106,8 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
 
     const EMPTY_FILTER_VALUE = 'ENTER_SEARCH_TERM_HERE';
 
+    protected $requestData;
+
     public function __construct(
         \Funimation\Catalog\Api\Data\ProductLayeredResultsInterfaceFactory $searchResultsFactory,
         \Funimation\Catalog\Api\Data\FilterInterfaceFactory $filtersFactory,
@@ -118,7 +120,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Catalog\Model\ResourceModel\Product $resourceModel,
         \Funimation\Catalog\Model\Data\AttributeFactory $attributeFactory,
-        \Magento\Review\Model\Review\SummaryFactory $summaryFactory,    
+        \Magento\Review\Model\Review\SummaryFactory $summaryFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
         \Funimation\SizeChart\Model\SizeChartFactory $sizeChartModelFactory,
@@ -129,7 +131,8 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Catalog\Api\Data\ProductExtensionFactory $productExtensionFactory,
         \Magento\CatalogRule\Model\Rule $rule,
-        \Magento\Customer\Model\Session $customerSession
+        \Magento\Customer\Model\Session $customerSession,
+        \Magento\Framework\Webapi\Rest\Request $requestData
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
         $this->filtersFactory = $filtersFactory;
@@ -154,6 +157,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         $this->productExtensionFactory = $productExtensionFactory;
         $this->customerSession = $customerSession;
         $this->rule = $rule;
+        $this->requestData = $requestData;
     }
 
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
@@ -240,7 +244,14 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         $searchResult->setSearchCriteria($searchCriteria);
 
         $searchResult->setItems($collection->getItems());
+
+        $data = $this->requestData->getParams();
+        $customer_group_id = isset($data['customer_group_id'])?$data['customer_group_id']:0;
+
         foreach($collection as $key => $product){
+            if(!empty($customer_group_id)){
+                $product->setCustomerGroupId($customer_group_id);
+            }
             $this->_addStockInformation($product);
             $this->_addCatalogRule($product);
 
@@ -332,7 +343,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             if ($filter->getField()
                 && in_array($filter->getField(), $this->filterAttributesToBeValidated)
                 && $filter->getValue() == self::EMPTY_FILTER_VALUE
-                )
+            )
             {
                 continue;
             }
@@ -345,34 +356,34 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
 
     /**
      * Adds rating summary to product
-     * 
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @return \Magento\Catalog\Model\Product
      */
     protected function _addRatingSummary($product)
     {
         $summaryData = $this->summaryFactory
-                            ->create()
-                            ->setStoreId($this->storeManager->getStore()->getId())
-                            ->load($product->getId());
-        
+            ->create()
+            ->setStoreId($this->storeManager->getStore()->getId())
+            ->load($product->getId());
+
         $product
             ->setRatingSummary($summaryData->getRatingSummary())
             ->setReviewsCount($summaryData->getReviewsCount());
-        
+
         return $product;
     }
 
     /**
      * Adds size chart information to product
-     * 
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @return \Magento\Catalog\Model\Product
      */
     protected function _addSizeChartInformation($product)
     {
         $sizeChartModel = $this->sizeChartModelFactory->create()
-                                                      ->load($product->getSizeChart());
+            ->load($product->getSizeChart());
 
         if ($sizeChartModel->getEntityId()) {
             $this->sizeChart->setEntityId($sizeChartModel->getEntityId());
@@ -381,13 +392,13 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
 
             $product->setSizeChart($this->sizeChart);
         }
-        
+
         return $product;
     }
-    
+
     /**
      * Add default catgory information
-     * 
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @return \Magento\Catalog\Model\Product
      */
@@ -405,17 +416,17 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
 
     /**
      * Add product image
-     * 
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @return \Magento\Catalog\Model\Product
      */
     protected function _addProductImage($product)
     {
         $image = $product->getMediaGalleryImages()
-                             ->getFirstItem();            
-            
+            ->getFirstItem();
+
         $product->setProductImage($image["file"]);
-        
+
         return $product;
     }
 
@@ -428,7 +439,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         $productId = $this->resourceModel->getIdBySku($sku);
 
         $product = $this->getById($productId, $editMode, $storeId, $forceReload, $ratingSummary, true);
-        
+
         return $product;
     }
 
@@ -456,6 +467,13 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         if (!isset($this->instancesById[$productId][$cacheKey]) || $forceReload) {
 
             $product = $this->productFactory->create();
+
+            $data = $this->requestData->getParams();
+            $customer_group_id = isset($data['customer_group_id'])?$data['customer_group_id']:0;
+            if(!empty($customer_group_id)){
+                $product->setCustomerGroupId($customer_group_id);
+            }
+
             if ($editMode) {
                 $product->setData('_edit_mode', true);
             }
@@ -690,36 +708,36 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             $updatedAttribute->setAttributeLabel($label);
             $updateCustomAttributes[] = $updatedAttribute;
         }
-        
+
         if(!$categoryIdsAdded){
             $updatedAttribute = $this->attributeFactory->create();
             $updatedAttribute->setAttributeCode('category_ids');
             $updatedAttribute->setValue($product->getCategoryIds());
             $categories = $this->categoryCollectionFactory->create();
-                $categories->setStoreId($this->storeManager->getStore()->getId())
-                    ->addAttributeToSelect('entity_id')
-                    ->addAttributeToSelect('name')
-                    ->addAttributeToSelect('url_key')
-                    ->addAttributeToSelect('level')
-                    ->addAttributeToSelect('parent_id')
-                    ->addAttributeToFilter('entity_id', array('in'=>$product->getCategoryIds()));
+            $categories->setStoreId($this->storeManager->getStore()->getId())
+                ->addAttributeToSelect('entity_id')
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('url_key')
+                ->addAttributeToSelect('level')
+                ->addAttributeToSelect('parent_id')
+                ->addAttributeToFilter('entity_id', array('in'=>$product->getCategoryIds()));
 
-                $categoryValue = [];
-                foreach ($categories as $category) {
-                    $categoryValue[] = array(
-                        'id'=>$category->getData('entity_id'),
-                        'name'=>$category->getData('name'),
-                        'url_key'=>$category->getData('url_key'),
-                        'level'=>$category->getData('level'),
-                        'parent_id'=>$category->getData('parent_id')
-                    );
-                }
-                if ($categoryValue){
-                    $updatedAttribute->setValue($categoryValue);
-                }
-                $label = $this->attributeSource->getAttributeSourceText($updatedAttribute);
-                $updatedAttribute->setAttributeLabel($label);
-                $updateCustomAttributes[] = $updatedAttribute;
+            $categoryValue = [];
+            foreach ($categories as $category) {
+                $categoryValue[] = array(
+                    'id'=>$category->getData('entity_id'),
+                    'name'=>$category->getData('name'),
+                    'url_key'=>$category->getData('url_key'),
+                    'level'=>$category->getData('level'),
+                    'parent_id'=>$category->getData('parent_id')
+                );
+            }
+            if ($categoryValue){
+                $updatedAttribute->setValue($categoryValue);
+            }
+            $label = $this->attributeSource->getAttributeSourceText($updatedAttribute);
+            $updatedAttribute->setAttributeLabel($label);
+            $updateCustomAttributes[] = $updatedAttribute;
         }
         $updateCustomAttributes[] = $custom_tier_prices;
         $product->setAdditionalAttributes($updateCustomAttributes);
@@ -731,7 +749,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         //** add stock information */
         $productExtension = $product->getExtensionAttributes();
 
-            // stockItem := \Magento\CatalogInventory\Api\Data\StockItemInterface
+        // stockItem := \Magento\CatalogInventory\Api\Data\StockItemInterface
         $productExtension->setStockItem($this->stockRegistry->getStockItem($product->getId()));
         $product->setExtensionAttributes($productExtension);
         return $product;
@@ -771,13 +789,13 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             ->addFieldToFilter('main_table.is_active', array('eq'=>1))
             ->addFieldToFilter('catalogrule_product.from_time', [ ['eq'=>0] , ['lt'=> $date]])
             ->addFieldToFilter('catalogrule_product.to_time', [['eq'=>0], ['gt'=> $date]])
-            ;
+        ;
 
         $rules=[];
         foreach ($ruleCollection as $rule) {
             $rules[] = $rule;
         }
-        
+
         $product->setCatalogRule($rules);
 
         return $product;
@@ -844,7 +862,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         }
     }
 
-	/**
+    /**
      * {@inheritdoc}
      */
     public function getPriceAndStatus($sku, $editMode = false, $storeId = null, $forceReload = false, $ratingSummary = false)
