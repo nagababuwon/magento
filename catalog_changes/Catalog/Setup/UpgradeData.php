@@ -112,8 +112,83 @@ class UpgradeData implements UpgradeDataInterface
 
             $eavSetup->addAttributeToSet(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'Product Details', 'is_sale_item');
         }
+
         if ($context->getVersion()
-            && version_compare($context->getVersion(), '1.7.0') < 0
+            && version_compare($context->getVersion(), '1.4.0') < 0
+        ) {
+            $eavSetup->addAttribute(
+                \Magento\Catalog\Model\Product::ENTITY,
+                'view_1',
+                [
+                    'type' => 'varchar',
+                    'backend' => '',
+                    'frontend' => 'Magento\Catalog\Model\Product\Attribute\Frontend\Image',
+                    'label' => 'View 1',
+                    'input' => 'media_image',
+                    'class' => '',
+                    'source' => '',
+                    'global' => 1,
+                    'visible' => true,
+                    'required' => false,
+                    'user_defined' => true,
+                    'default' => '',
+                    'used_in_product_listing' => true,
+                    'unique' => false,
+                    'visible_on_front' => true,
+                    'attribute_set_id' => 'Default'
+                ]
+            );
+            $eavSetup->addAttributeToSet(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'image-management', 'view_1');
+            $eavSetup->addAttribute(
+                \Magento\Catalog\Model\Product::ENTITY,
+                'view_2',
+                [
+                    'type' => 'varchar',
+                    'backend' => '',
+                    'frontend' => 'Magento\Catalog\Model\Product\Attribute\Frontend\Image',
+                    'label' => 'View 2',
+                    'input' => 'media_image',
+                    'class' => '',
+                    'source' => '',
+                    'global' => 1,
+                    'visible' => true,
+                    'required' => false,
+                    'user_defined' => true,
+                    'default' => '',
+                    'used_in_product_listing' => true,
+                    'unique' => false,
+                    'visible_on_front' => true,
+                    'attribute_set_id' => 'Default'
+                ]
+            );
+            $eavSetup->addAttributeToSet(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'image-management', 'view_2');
+            $eavSetup->addAttribute(
+                \Magento\Catalog\Model\Product::ENTITY,
+                'view_3',
+                [
+                    'type' => 'varchar',
+                    'backend' => '',
+                    'frontend' => 'Magento\Catalog\Model\Product\Attribute\Frontend\Image',
+                    'label' => 'View 3',
+                    'input' => 'media_image',
+                    'class' => '',
+                    'source' => '',
+                    'global' => 1,
+                    'visible' => true,
+                    'required' => false,
+                    'user_defined' => true,
+                    'default' => '',
+                    'used_in_product_listing' => true,
+                    'unique' => false,
+                    'visible_on_front' => true,
+                    'attribute_set_id' => 'Default'
+                ]
+            );
+            $eavSetup->addAttributeToSet(\Magento\Catalog\Model\Product::ENTITY, 'Default', 'image-management', 'view_3');
+        }
+
+        if ($context->getVersion()
+            && version_compare($context->getVersion(), '1.6.0') < 0
         ) {
             $connection = $setup->getConnection();
             $connection->addColumn(
@@ -128,6 +203,7 @@ class UpgradeData implements UpgradeDataInterface
                 ]
             );
         }
+
         $setup->endSetup();
     }
 }

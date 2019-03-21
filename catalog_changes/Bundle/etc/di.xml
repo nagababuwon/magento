@@ -7,6 +7,8 @@
 
     <preference for="Magento\Bundle\Pricing\Price\BundleSelectionPrice" type="Funimation\Bundle\Pricing\Price\BundleSelectionPrice" />
 
+    <preference for="Magento\Bundle\Pricing\Price\TierPrice" type="Funimation\Bundle\Pricing\Price\TierPrice" />
+
     <!--
     <preference for="Magento\Bundle\Model\LinkManagement" type="Funimation\Bundle\Model\LinkManagement" />
     -->

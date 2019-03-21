@@ -6,7 +6,7 @@
 
 namespace Funimation\Catalog\Model\Product\Type;
 
-use Magento\Catalog\Model\Product;
+use Funimation\Catalog\Model\Product;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Store\Model\Store;
@@ -375,12 +375,17 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
             }
             $tierPrice->setValue($value);
             $tierPrice->setQty($price['price_qty']);
+
+
+
+
             if (isset($price['percentage_value'])) {
                 $tierPrice->getExtensionAttributes()->setPercentageValue($price['percentage_value']);
             }
             $websiteId = isset($price['website_id']) ? $price['website_id'] : $this->getWebsiteForPriceScope();
             $tierPrice->getExtensionAttributes()->setWebsiteId($websiteId);
             $prices[] = $tierPrice;
+
         }
         return $prices;
     }

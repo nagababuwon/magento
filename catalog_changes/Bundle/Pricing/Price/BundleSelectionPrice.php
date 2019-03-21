@@ -28,6 +28,8 @@ class BundleSelectionPrice extends \Magento\Bundle\Pricing\Price\BundleSelection
      */
     public function getValue()
     {
+
+
         if (null !== $this->value) {
             return $this->value;
         }

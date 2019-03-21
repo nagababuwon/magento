@@ -54,16 +54,21 @@
     <preference for="Funimation\Catalog\Api\Data\CostInterface" type="Funimation\Catalog\Model\Product\Price\Cost" />
 
     <preference for="Funimation\Catalog\Model\ProductIdLocatorInterface" type="Funimation\Catalog\Model\ProductIdLocator" />
-
+    <preference for="Funimation\Catalog\Api\Data\ProductTierPriceInterface" type="Magento\Catalog\Model\Product\TierPrice" />
     <preference for="Magento\Catalog\Model\Product\TierPrice" type="Funimation\Catalog\Model\Product\TierPrice"/>
 
     <preference for="Funimation\Catalog\Api\Data\ProductTierPriceInterface" type="Funimation\Catalog\Model\Product\TierPrice"/>
+
 
     <preference for="Magento\Catalog\Model\Product\Attribute\Backend\GroupPrice\AbstractGroupPrice" type="Funimation\Catalog\Model\Product\Attribute\Backend\GroupPrice\AbstractGroupPrice"/>
 
     <preference for="Magento\Catalog\Model\Product\Attribute\Backend\Tierprice" type="Funimation\Catalog\Model\Product\Attribute\Backend\Tierprice" />
 
     <preference for="Magento\Catalog\Model\Product\Type\Price" type="Funimation\Catalog\Model\Product\Type\Price"/>
+    <preference for="Magento\Catalog\Model\Product\TierPriceManagement" type="Funimation\Catalog\Model\Product\TierPriceManagement"/>
+    <preference for="Magento\Catalog\Model\Product\Type" type="Funimation\Catalog\Model\Product\Type"/>
+
+    <preference for="Magento\Catalog\Model\Product" type="Funimation\Catalog\Model\Product"/>
 
     <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
 

@@ -602,6 +602,9 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         }
         if ($product->getTypeId() == "bundle") {
             $bundle_tier_price_array = $product->getTierPrices();
+
+            //print_r($bundle_tier_price_array);
+
             if(!empty($bundle_tier_price_array)){
                 $selectionCollection = $product->getTypeInstance(true)
                     ->getSelectionsCollection(
@@ -618,23 +621,13 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
                 $tier_price_array = [];
                 if (count($bundle_tier_price_array) > 0) {
                     foreach ($bundle_tier_price_array as $key => $price) {
+                        //print_r($price->getData());
                         $groupPrice = 0;
-                        foreach ($selectionCollection as $proselection) {
-                            if($proselection->getIsDefault()) {
-                                if($proselection->getSelectionPriceType() && $product->getPriceType()){
-                                    $childPrice = round($product->getPrice() * (100 - $price->getData('value'))/100,2);
-                                    $discountedPrice = round($childPrice * (100 - $price->getData('value')) / 100, 2);
-                                }else{
-                                    $discountedPrice = round($proselection->getSelectionPriceValue() * (100 - $price->getData('value')) / 100, 2);
-                                }
-                                $groupPrice = $groupPrice + $discountedPrice;
-                            }
 
-                        }
-                        if($product->getPriceType()){
-                            $parentProductPrice = round($product->getPrice() * (100 - $price->getData('value')) / 100, 2);
-                            $groupPrice = $groupPrice + $parentProductPrice;
-                        }
+                        $regularPrice = $product->getPriceInfo()->getPrice('final_price')->getMinimalPrice()->getValue();
+                        $groupPrice = $regularPrice * ((100-$price->getExtensionAttributes()->getPercentageValue()) / 100);
+
+
                         $tier_price_array[$key]['customer_group_id'] = $price->getData('customer_group_id');
                         $tier_price_array[$key]['qty'] = $price->getData('qty');
                         $tier_price_array[$key]['value'] = $groupPrice;
@@ -642,6 +635,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
                 }
             }
         }
+
         $firstKey = '';
         if(!empty($tier_price_array)){
             $tier_price_array_keys = array_keys($tier_price_array);

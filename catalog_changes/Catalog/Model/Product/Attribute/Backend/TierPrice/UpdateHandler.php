@@ -92,16 +92,22 @@ class UpdateHandler implements ExtensionInterface
             $origPrices = $entity->getOrigData($attribute->getName());
             //echo "Is Global - ".$isGlobal."====<pre>"; print_r($origPrices); echo "</pre>=====";
             $old = $this->prepareOriginalDataToCompare($origPrices, $isGlobal);
+            if ($entity->getTypeId() == "bundle") {
+                $productPrice = $entity->getPriceInfo()->getPrice('final_price')->getMinimalPrice()->getValue();
+            }else{
+                $productPrice = $entity->getPrice();
+            }
             // prepare data for save
-            $new = $this->prepareNewDataForSave($priceRows, $isGlobal);
-
-            //echo "<pre>"; print_r($old); print_r($new); echo "</pre>";
-
+            $new = $this->prepareNewDataForSave($priceRows,$productPrice,$entity->getTypeId(), $isGlobal);
 
 
             $delete = array_diff_key($old, $new);
             $insert = array_diff_key($new, $old);
             $update = array_intersect_key($new, $old);
+
+            //echo "<pre>";
+            //print_r($update);
+            //echo "</pre>";
 
             $isAttributeChanged = $this->deleteValues($productId, $delete);
             $isAttributeChanged |= $this->insertValues($productId, $insert);
@@ -165,12 +171,10 @@ class UpdateHandler implements ExtensionInterface
                         'percentage_value' => $this->getPercentage($value)
                     ]
                 );
-
                 $this->tierPriceResource->savePriceData($price);
                 $isChanged = true;
             }
         }
-
         return $isChanged;
     }
 
@@ -243,13 +247,23 @@ class UpdateHandler implements ExtensionInterface
     {
         $useForAllGroups = (int)$data['cust_group'] === $this->groupManagement->getAllCustomersGroup()->getId();
         $customerGroupId = $useForAllGroups ? 0 : $data['cust_group'];
+        $productPrice = '';
+        if($data['value_type']=='percent'){
+            if($data['product_type']=='bundle'){
+                $productPrice = $data['percentage_value'];
+            }else{
+                $productPrice = $data['product_price'] * ((100-$data['percentage_value']) / 100);
+            }
+
+        }
+
         $tierPrice = array_merge(
             $this->getAdditionalFields($data),
             [
                 'website_id' => $data['website_id'],
                 'all_groups' => (int)$useForAllGroups,
                 'customer_group_id' => $customerGroupId,
-                'value' => $data['price'] ?? null,
+                'value' => isset($data['price'])?$data['price']:$productPrice,
                 'qty' => (int)$data['price_qty']
             ]
         );
@@ -289,25 +303,29 @@ class UpdateHandler implements ExtensionInterface
 
     /**
      * @param array $priceRows
+     * @param integer $productPrice
      * @param bool $isGlobal
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function prepareNewDataForSave($priceRows, $isGlobal = true): array
+    private function prepareNewDataForSave($priceRows,$productPrice,$productType, $isGlobal = true): array
     {
         $new = [];
         $priceRows = array_filter($priceRows);
-        foreach ($priceRows as $data) {
+        foreach ($priceRows as $pkey => $data) {
             if (empty($data['delete'])
                 && (!empty($data['price_qty'])
                     || isset($data['cust_group'])
                     || $isGlobal === $this->isWebsiteGlobal((int)$data['website_id']))
             ) {
                 $key = $this->getPriceKey($data);
+                $data['product_price'] = $productPrice;
+                $data['product_type'] = $productType;
                 $new[$key] = $this->prepareTierPrice($data);
             }
         }
 
         return $new;
     }
+
 }

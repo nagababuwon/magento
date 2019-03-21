@@ -175,4 +175,19 @@ interface ProductInterface
      * @return $this
      */
     public function setCatalogRule($catalogRule);
+
+    /**
+     * Gets list of product tier prices
+     *
+     * @return \Funimation\Catalog\Api\Data\ProductTierPriceInterface[]|null
+     */
+    public function getTierPrices();
+
+    /**
+     * Sets list of product tier prices
+     *
+     * @param \Funimation\Catalog\Api\Data\ProductTierPriceInterface[] $tierPrices
+     * @return $this
+     */
+    public function setTierPrices(array $tierPrices = null);
 }

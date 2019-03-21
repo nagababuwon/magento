@@ -152,7 +152,7 @@ class Collection
             ];
         }
 
-        /* @var $backend \Funimation\Catalog\Model\Product\Attribute\Backend\Tierprice */
+        /* @var $backend \Magento\Catalog\Model\Product\Attribute\Backend\Tierprice */
         $backend = $attribute->getBackend();
 
         foreach ($this->getItems() as $item) {
