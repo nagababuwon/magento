@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Funimation\Catalog\Api\ProductRepositoryInterface" type="Funimation\Catalog\Model\ProductRepository" />
+
+    <preference for="Funimation\Catalog\Api\Data\AttributeInterface" type="Funimation\Catalog\Model\Data\Attribute" />
+
+    <preference for="Funimation\Catalog\Api\Data\ProductLayeredResultsInterface" type="Funimation\Catalog\Model\Data\ProductLayeredResult" />
+    <preference for="Funimation\Catalog\Api\Data\FilterInterface" type="Funimation\Catalog\Model\Data\Filter" />
+    <preference for="Funimation\Catalog\Api\Data\FilterOptionInterface" type="Funimation\Catalog\Model\Data\FilterOption" />
+
+    <preference for="Funimation\Catalog\Api\ProductLinkManagementInterface" type="Funimation\Catalog\Model\ProductLinkManagement" />
+
+    <preference for="Funimation\Catalog\Api\Data\ConfigurableOptionInterface" type="Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute" />
+    <preference for="Funimation\Catalog\Api\Data\ConfigurableOptionValueInterface" type="Funimation\Catalog\Model\Data\ConfigurableOptionValue" />
+    
+    <preference for="Funimation\Catalog\Api\CategoryManagementInterface" 
+                type="Funimation\Catalog\Model\CategoryManagement" />
+    
+    <preference for="Funimation\Catalog\Api\Data\CategoryTreeInterface" 
+                type="Funimation\Catalog\Model\Category" />
+
+    <!-- bug fix for configurable product switching back to simple -->
+    <preference for="Magento\Catalog\Model\Product\TypeTransitionManager"
+                type="Funimation\Catalog\Model\Product\TypeTransitionManager" />
+
+
+    <preference for="Magento\Catalog\Model\ResourceModel\Product\Collection"
+                type="Funimation\Catalog\Model\ResourceModel\Product\Collection" />
+
+    <type name="Funimation\Catalog\Model\ProductRepository">
+        <arguments>
+            <argument name="filterableAttributes" xsi:type="object">Magento\Catalog\Model\Layer\Search\FilterableAttributeList</argument>
+        </arguments>
+    </type>
+<!--
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="add_attributes_plugin" type="Funimation\Catalog\Plugin\Link" sortOrder="10" />
+    </type>
+-->
+    <type name="Magento\Catalog\Model\ResourceModel\Eav\Attribute">
+        <plugin name="save_attributes_plugin" type="Funimation\Catalog\Plugin\Attribute" sortOrder="15" />
+    </type>
+
+    <preference for="Funimation\Catalog\Api\TierPriceStorageInterface" type="Funimation\Catalog\Model\Product\Price\TierPriceStorage" />
+
+    <preference for="Funimation\Catalog\Api\Data\TierPriceInterface" type="Funimation\Catalog\Model\Product\Price\TierPrice" />
+
+    <preference for="Funimation\Catalog\Api\BasePriceStorageInterface" type="Funimation\Catalog\Model\Product\Price\BasePriceStorage" />
+
+    <preference for="Funimation\Catalog\Api\Data\BasePriceInterface" type="Funimation\Catalog\Model\Product\Price\BasePrice" />
+
+    <preference for="Funimation\Catalog\Api\CostStorageInterface" type="Funimation\Catalog\Model\Product\Price\CostStorage" />
+
+    <preference for="Funimation\Catalog\Api\Data\CostInterface" type="Funimation\Catalog\Model\Product\Price\Cost" />
+
+    <preference for="Funimation\Catalog\Model\ProductIdLocatorInterface" type="Funimation\Catalog\Model\ProductIdLocator" />
+
+    <preference for="Magento\Catalog\Model\Product\TierPrice" type="Funimation\Catalog\Model\Product\TierPrice"/>
+
+    <preference for="Funimation\Catalog\Api\Data\ProductTierPriceInterface" type="Funimation\Catalog\Model\Product\TierPrice"/>
+
+    <preference for="Magento\Catalog\Model\Product\Attribute\Backend\GroupPrice\AbstractGroupPrice" type="Funimation\Catalog\Model\Product\Attribute\Backend\GroupPrice\AbstractGroupPrice"/>
+
+    <preference for="Magento\Catalog\Model\Product\Attribute\Backend\Tierprice" type="Funimation\Catalog\Model\Product\Attribute\Backend\Tierprice" />
+
+    <preference for="Magento\Catalog\Model\Product\Type\Price" type="Funimation\Catalog\Model\Product\Type\Price"/>
+
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+
+        <arguments>
+
+            <argument name="extensionActions" xsi:type="array">
+
+                <item name="Magento\Catalog\Api\Data\ProductInterface" xsi:type="array">
+
+                    <item name="read" xsi:type="array">
+
+                        <item name="optionReader" xsi:type="string">Magento\Catalog\Model\Product\Option\ReadHandler</item>
+
+                        <item name="mediaGalleryRead" xsi:type="string">Magento\Catalog\Model\Product\Gallery\ReadHandler</item>
+
+                    </item>
+
+                    <item name="create" xsi:type="array">
+
+                        <item name="custom_options" xsi:type="string">Magento\Catalog\Model\Product\Option\SaveHandler</item>
+
+                        <item name="mediaGalleryCreate" xsi:type="string">Magento\Catalog\Model\Product\Gallery\CreateHandler</item>
+
+                        <item name="tierPriceCreator" xsi:type="string">Funimation\Catalog\Model\Product\Attribute\Backend\TierPrice\SaveHandler</item>
+
+                    </item>
+
+                    <item name="update" xsi:type="array">
+
+                        <item name="optionUpdater" xsi:type="string">Magento\Catalog\Model\Product\Option\SaveHandler</item>
+
+                        <item name="mediaGalleryUpdate" xsi:type="string">Magento\Catalog\Model\Product\Gallery\UpdateHandler</item>
+
+                        <item name="tierPriceUpdater" xsi:type="string">Funimation\Catalog\Model\Product\Attribute\Backend\TierPrice\UpdateHandler</item>
+
+                    </item>
+
+                </item>
+
+            </argument>
+
+        </arguments>
+
+    </type>
+
+    <type name="Funimation\Catalog\Model\Product\Price\CostStorage">
+
+        <arguments>
+
+            <argument name="allowedProductTypes" xsi:type="array">
+
+                <item name="0" xsi:type="string">simple</item>
+
+                <item name="1" xsi:type="string">virtual</item>
+
+            </argument>
+
+        </arguments>
+
+    </type>
+
+    <type name="Funimation\Catalog\Model\Product\Price\BasePriceStorage">
+
+        <arguments>
+
+            <argument name="allowedProductTypes" xsi:type="array">
+
+                <item name="0" xsi:type="string">simple</item>
+
+                <item name="1" xsi:type="string">virtual</item>
+
+                <item name="2" xsi:type="string">bundle</item>
+
+            </argument>
+
+        </arguments>
+
+    </type>
+
+    <type name="Funimation\Catalog\Model\Product\Price\TierPriceValidator">
+
+        <arguments>
+
+            <argument name="allowedProductTypes" xsi:type="array">
+
+                <item name="0" xsi:type="string">simple</item>
+
+                <item name="1" xsi:type="string">virtual</item>
+
+                <item name="2" xsi:type="string">bundle</item>
+
+            </argument>
+
+        </arguments>
+
+    </type>
+
+</config>

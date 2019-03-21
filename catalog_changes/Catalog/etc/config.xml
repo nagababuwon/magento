@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <jobs>
+            <cron_special_price>
+                <!-- Every day at midnight -->
+                <active>1</active>
+                <schedule_special_price>0 0 * * *</schedule_special_price>
+            </cron_special_price>
+            <cron_related_products>
+                <active>1</active>
+                <schedule_related_products>0 23 * * *</schedule_related_products>
+            </cron_related_products>
+        </jobs>
+    </default>
+</config>

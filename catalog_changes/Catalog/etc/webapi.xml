@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <route url="/V1/products/layered" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="getLayeredList"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
+
+    <route url="/V1/products" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
+    <route url="/V1/getproducts" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="getPricesList"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
+    <route url="/V1/products/:sku" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
+
+    <route url="/V2/products/:sku/links/:type" method="GET">
+        <service class="Funimation\Catalog\Api\ProductLinkManagementInterface" method="getLinkedItemsByType"/>
+        <resources>
+            <resource ref="Magento_Catalog::catalog"/>
+        </resources>
+    </route>
+
+    <route url="/V2/productByUrlKey/:urlKey" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="getByUrlKey"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+        <data>
+            <parameter name="ratingSummary" force="true">true</parameter>
+        </data>
+    </route>
+
+    <route url="/V2/products/:sku" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="get"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
+
+    <!-- Get categories rewrite -->
+    <route url="/V1/categories" method="GET">
+        <service class="Funimation\Catalog\Api\CategoryManagementInterface" method="getTree" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+	
+	<!-- Get products rewrite -->
+    <route url="/V2/products/priceAndStatus/:sku" method="GET">
+        <service class="Funimation\Catalog\Api\ProductRepositoryInterface" method="getPriceAndStatus" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+</routes>

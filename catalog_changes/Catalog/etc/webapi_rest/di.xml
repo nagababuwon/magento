@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\ConfigurableProduct\Helper\Product\Options\Loader" type="Funimation\Catalog\Helper\Options\Loader"/>
+    <type name="Magento\Catalog\Api\Data\ProductLinkExtensionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Funimation\Catalog\Model\Data\ProductLinkExtension</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\ProductLink\Converter\ConverterPool">
+        <arguments>
+            <argument name="converters" xsi:type="array">
+                <item name="default" xsi:type="object">Funimation\Catalog\Model\ProductLink\Converter\DefaultConverter</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="add_attributes_plugin" type="Funimation\Catalog\Plugin\Link" sortOrder="10" />
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="born_add_configurable_price_plugin" type="Funimation\Catalog\Plugin\ConfigurableOptions" sortOrder="10" />
+    </type>
+    
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="born_add_configurable_qty_plugin" type="Funimation\Catalog\Plugin\ConfigurableAndBundleProductQty" sortOrder="10" />
+    </type>
+    <type name="Magento\ConfigurableProduct\Model\LinkManagement">
+        <plugin name="add_stock_item_to_children" type="Funimation\Catalog\Plugin\StockAddChildren" sortOrder="10" />
+    </type>
+    <type name="Magento\ConfigurableProduct\Pricing\Price\ConfigurablePriceResolver">
+        <plugin name="born_configurable_price_calculation" type="Funimation\Catalog\Plugin\ConfigurablePriceResolve" sortOrder="10" />
+    </type>    
+</config>

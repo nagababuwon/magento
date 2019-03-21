@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Magento\Bundle\Model\Product\Price" type="Funimation\Bundle\Model\Product\Price" />
+
+    <preference for="Magento\Bundle\Model\Product\LinksList" type="Funimation\Bundle\Model\Product\LinksList" />
+
+    <preference for="Magento\Bundle\Pricing\Price\BundleSelectionPrice" type="Funimation\Bundle\Pricing\Price\BundleSelectionPrice" />
+
+    <!--
+    <preference for="Magento\Bundle\Model\LinkManagement" type="Funimation\Bundle\Model\LinkManagement" />
+    -->
+
+    <!-- to show option price box for dynamic price in admin panel -->
+    <preference for="Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundlePanel" type="Funimation\Bundle\Ui\DataProvider\Product\Form\Modifier\BundlePanel" />
+
+    <!-- to save option box for dynamic price in admin panel -->
+    <preference for="Magento\Bundle\Controller\Adminhtml\Product\Initialization\Helper\Plugin\Bundle" type="Funimation\Bundle\Controller\Adminhtml\Product\Initialization\Helper\Plugin\Bundle" />
+</config>
